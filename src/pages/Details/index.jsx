@@ -47,7 +47,6 @@ export function Details() {
         const movie = await api.get(`/movies/${movieId}`)
         
         const { data } = movie;
-        // console.log(movie)
 
         setMovieData(data);
 
@@ -60,9 +59,6 @@ export function Details() {
 
     movieDetails();
   }, [movieId]);
-
-  // console.log(movieData)
-  // console.log(userInfo)
 
   return (
     <Container>

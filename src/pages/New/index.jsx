@@ -63,9 +63,33 @@ export function New(){
   }
 
   async function handleUpdateMovie() {
+    if (!title) {
+      return alert("Digite o título do filme.");
+    }
+
+    if (rating <= 0 || rating > 5) {
+      return alert("Digite uma nota entre 1 e 5.");
+    }
+
+    if(newTag) {
+      return alert("Você deixou uma tag no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio.");
+    }
+
+    await api.put(`/movies/${movieId}/${user.id}`, {
+      title,
+      description,
+      rating,
+      tags
+    });
+
+    alert("Filme Atualizado com sucesso!");
+    navigate(-1);
+  }
+
+  async function handleMovieInformation() {
     const newTags = [];
 
-    const { data } = await api.get(`/movies/${movieId}`)
+    const { data } = await api.get(`/movies/${movieId}`);
     
     if (data.user_id === user.id) {
       setTitle(data.title);
@@ -81,7 +105,6 @@ export function New(){
   }
 
   async function handleDeleteMovie(movieId) {
-    console.log(movieId)
     await api.delete(`/movies/${movieId}`);
 
     alert("Filme deletado com sucesso!");
@@ -94,7 +117,7 @@ export function New(){
 
   useEffect(() => {
     if (movieId) {
-      handleUpdateMovie();
+      handleMovieInformation();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieId])
@@ -158,7 +181,7 @@ export function New(){
               { movieId ? <Button title="Excluir filme" className="black" onClick={() => handleDeleteMovie(movieId)} /> : ''}
               <Button 
                 title={ movieId ? 'Salvar alterações' : 'Salvar Filme'}
-                onClick={ movieId ? () => console.log("teste") : handleNewMovie}
+                onClick={ movieId ? handleUpdateMovie : handleNewMovie}
               />
             </div>
           </Form>
