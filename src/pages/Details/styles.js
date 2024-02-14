@@ -86,8 +86,8 @@ export const MovieInfo = styled.div`
   margin-bottom: 40px;
 
   > img {
-    width: 16px;
-    height: 16px;
+    width: 26px;
+    height: 26px;
 
     border-radius: 35px;
     border: 1px solid #3E3B47;

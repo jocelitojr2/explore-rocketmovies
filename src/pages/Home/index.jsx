@@ -34,7 +34,7 @@ export function Home(){
       <Header setSearch={setSearch} />
 
       <Section title="Meus filmes">
-        <NewNote to="/New">
+        <NewNote to="/new">
           <FiPlus/>
           Adicionar filme
         </NewNote>

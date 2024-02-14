@@ -12,6 +12,7 @@ export function AppRoutes() {
       <Route path="/profile" element={<Profile />} />
       
       <Route path="/new" element={<New />} />
+      <Route path="/new/:id" element={<New />} />
       
       <Route path="/details/:id" element={<Details />} />
 

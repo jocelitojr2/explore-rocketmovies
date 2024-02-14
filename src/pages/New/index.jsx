@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Content, ToGoBack, Form } from "./styles";
 import { FiArrowLeft } from "react-icons/fi"
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { useAuth } from "../../hooks/auth"
 
 import { Textarea } from "../../components/Textarea"
 import { NoteItem } from "../../components/NoteItem"
@@ -14,6 +16,10 @@ import { Input } from "../../components/Input"
 import { api } from "../../services/api";
 
 export function New(){
+  const { user } = useAuth();
+  const params = useParams();
+  const movieId = params.id;
+
   const [title, setTitle] = useState("");
   const [rating, setRating] = useState("");
   const [description, setDescription] = useState("");
@@ -38,7 +44,7 @@ export function New(){
     }
 
     if (rating <= 0 || rating > 5) {
-      return alert("Digite uma nota entre 0 e 5.");
+      return alert("Digite uma nota entre 1 e 5.");
     }
 
     if(newTag) {
@@ -56,9 +62,42 @@ export function New(){
     navigate(-1);
   }
 
+  async function handleUpdateMovie() {
+    const newTags = [];
+
+    const { data } = await api.get(`/movies/${movieId}`)
+    
+    if (data.user_id === user.id) {
+      setTitle(data.title);
+      setRating(data.rating);
+      setDescription(data.description);
+      
+      data.tags.forEach(tag => newTags.push(tag.name));
+      setTags(newTags)
+    } else {
+      alert("Você não tem permissão para atualizar este filme.");
+      navigate("/");
+    }
+  }
+
+  async function handleDeleteMovie(movieId) {
+    console.log(movieId)
+    await api.delete(`/movies/${movieId}`);
+
+    alert("Filme deletado com sucesso!");
+    navigate(-1);
+  }
+
   function handleBack() {
     navigate(-1)
   }
+
+  useEffect(() => {
+    if (movieId) {
+      handleUpdateMovie();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [movieId])
 
   return (
     <Container>
@@ -69,24 +108,27 @@ export function New(){
       </ToGoBack>
 
       <Content>
-        <Section title="Novo filme"/>
+        <Section title={movieId ? title : 'Novo Filme'}/>
 
         <main>
           <Form>
             <div className="inputs-w50">
               <Input 
-                placeholder="Título" 
+                placeholder={"Título" }
+                value = { title }
                 onChange={e => setTitle(e.target.value)}
               />
               <Input 
                 placeholder="Sua nota (de 0 a 5)" 
                 type="number"
+                value = { rating }
                 onChange={e => setRating(e.target.value)}
               />
             </div>
 
             <Textarea
-              placeholder="Observações"
+              placeholder={movieId ? description : 'Observações'}
+              defaultValue={description}
               onChange={e => setDescription(e.target.value)}
             />
 
@@ -113,10 +155,10 @@ export function New(){
             </Section>
 
             <div className="buttons">
-              <Button title="Excluir filme" className="black"/>
+              { movieId ? <Button title="Excluir filme" className="black" onClick={() => handleDeleteMovie(movieId)} /> : ''}
               <Button 
-                title="Salvar alterações"
-                onClick={handleNewMovie}
+                title={ movieId ? 'Salvar alterações' : 'Salvar Filme'}
+                onClick={ movieId ? () => console.log("teste") : handleNewMovie}
               />
             </div>
           </Form>
