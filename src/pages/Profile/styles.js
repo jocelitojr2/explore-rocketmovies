@@ -19,11 +19,13 @@ export const Container = styled.div`
       font-size: 24px;
     }
 
-    a {
+    button {
       display: flex;
       align-items: center;
       gap: 8px;
       color: ${({theme}) => theme.COLORS.BLUE};
+      background: none;
+      border: none;
     }
   }
 `;

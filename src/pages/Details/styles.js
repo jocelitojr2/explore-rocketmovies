@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   width: 100%;
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: 120px 123px auto;
   grid-template-areas: 
   "header"
   "togoback"
@@ -46,15 +46,18 @@ export const Container = styled.div`
   }
 `;
 
-export const ToGoBack = styled(Link)`
+export const ToGoBack = styled.button`
   grid-area: togoback;
   margin: 40px 123px 40px 123px;
 
   display: flex;
   align-items: center;
   gap: 8px;
+  width: fit-content;
 
   color: ${({theme})=> theme.COLORS.BLUE};
+  background: none;
+  border: none;
 `;
 
 export const MovieTitle = styled.div`
@@ -69,7 +72,7 @@ export const MovieTitle = styled.div`
     margin-right: 9px;
   }
 
-  > svg {
+  > .stars svg {
     color: ${({theme}) => theme.COLORS.BLUE};
     width: 20px;
     height: 20px;
